@@ -28,8 +28,6 @@ java {
 
 }
 
-
-
 application {
     mainClass = 'studio.coffeesocial.Trader'
 }
