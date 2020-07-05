@@ -32,5 +32,7 @@ int[] stockPrices = {10, 7, 5, 8, 11, 9};
 
 Assert.assertEquals (6, getMaxProfit(stockPrices)); // returns 6 (buy at $5 sell at $11)
 
+## Implementation 
+
  
 

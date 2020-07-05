@@ -1,12 +1,29 @@
 package studio.coffeesocial;
 
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TraderTest {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TraderTest.class);
+
+    @Test
+    void mapReduce() {
+        var tradeData = Arrays.asList(10, 7, 5, 8, 11, 9);
+
+        assertEquals(6, Trader.mapReduce(tradeData));
+    }
 
     @Test
     void recursive() {
@@ -43,5 +60,36 @@ class TraderTest {
         var tradeDate = Arrays.asList(50, 40, 30, 100, 5);
 
         assertEquals(50, Trader.profit(tradeDate));
+    }
+
+    @Test
+    void smallData() {
+        var tradeDate = Collections.singletonList(5);
+
+        assertEquals(Integer.MIN_VALUE, Trader.profit(tradeDate));
+    }
+
+    @Test
+    void timeTest() {
+        // Test with 8 hours of randomly generated data
+        var testData = generateData(0, 60 * 8, 5, 55);
+
+        var startRecursive = System.nanoTime();
+        var recursive = Trader.recursive(testData);
+        var endRecursive = System.nanoTime();
+
+
+        var startMapReduce = System.nanoTime();
+        var mapReduce = Trader.recursive(testData);
+        var endMapReduce = System.nanoTime();
+
+        assertEquals(recursive, mapReduce);
+
+        LOGGER.info("\nRecursive: {}\nMapReduce: {}", endRecursive - startRecursive, endMapReduce - startMapReduce);
+
+    }
+
+    List<Integer> generateData(int seed, int datalength, int minimum, int maximum) {
+        return new Random(seed).ints(datalength, minimum, maximum).boxed().collect(Collectors.toList());
     }
 }
