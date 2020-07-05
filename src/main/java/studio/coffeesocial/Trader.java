@@ -15,12 +15,29 @@ public class Trader {
      * a value appears as all subsequent appearances can never return a higher value.
      *
      * @param priceList list of time ordered price values
-     * @return
+     * @return highest trade profit
      */
     protected static Integer mapReduce(List<Integer> priceList) {
         var prices = new HashSet<>(priceList);
 
         return prices.parallelStream()
+                .map(x -> profit(priceList.subList(priceList.indexOf(x), priceList.size())))
+                .max(Integer::compareTo)
+                .orElseThrow(() -> new IllegalStateException("Missing max value"));
+
+    }
+
+    /**
+     * Uses the constraint that the sale must be after the purchase. This means we only need to look at the first time
+     * a value appears as all subsequent appearances can never return a higher value.
+     *
+     * @param priceList list of time ordered price values
+     * @return highest trade profit
+     */
+    protected static Integer simpleStream(List<Integer> priceList) {
+        var prices = new HashSet<>(priceList);
+
+        return prices.stream()
                 .map(x -> profit(priceList.subList(priceList.indexOf(x), priceList.size())))
                 .max(Integer::compareTo)
                 .orElseThrow(() -> new IllegalStateException("Missing max value"));

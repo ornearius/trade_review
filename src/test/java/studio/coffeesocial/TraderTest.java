@@ -72,20 +72,26 @@ class TraderTest {
     @Test
     void timeTest() {
         // Test with 8 hours of randomly generated data
-        var testData = generateData(0, 60 * 8, 5, 55);
+        var testData = generateData(0,  60 * 8, 5, 55);
+
 
         var startRecursive = System.nanoTime();
         var recursive = Trader.recursive(testData);
         var endRecursive = System.nanoTime();
 
-
         var startMapReduce = System.nanoTime();
-        var mapReduce = Trader.recursive(testData);
+        var mapReduce = Trader.mapReduce(testData);
         var endMapReduce = System.nanoTime();
 
         assertEquals(recursive, mapReduce);
 
-        LOGGER.info("\nRecursive: {}\nMapReduce: {}", endRecursive - startRecursive, endMapReduce - startMapReduce);
+        var startStream = System.nanoTime();
+        var stream = Trader.simpleStream(testData);
+        var endStream = System.nanoTime();
+
+        assertEquals(stream, mapReduce);
+
+        LOGGER.info("\nRecursive: {}\nMapReduce: {}\nStream: {}", endRecursive - startRecursive, endMapReduce - startMapReduce, endStream - startStream);
 
     }
 
