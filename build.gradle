@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+//    id 'checkstyle' // Fails on Java 14 https://github.com/checkstyle/checkstyle/issues/6615
+    id 'pmd'
+    id 'idea' // optional (to generate IntelliJ IDEA project files)
+    id 'application'
+}
+
+group 'studio.coffeesocial'
+//version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
+    testImplementation 'org.mockito:mockito-core:3.3.3'
+    testImplementation 'org.mockito:mockito-junit-jupiter:3.3.3'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_14
+    targetCompatibility = JavaVersion.VERSION_14
+
+    withJavadocJar()
+
+}
+
+
+
+application {
+    mainClass = 'studio.coffeesocial.Trader'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+pmd {
+    toolVersion '6.23.0' //need the latest to parse Java 14
+    ignoreFailures=true
+}
+
+javadoc {
+    title 'Reverse Polish Calculator'
+}
